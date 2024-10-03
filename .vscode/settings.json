@@ -51,5 +51,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "My 3D.sln"
+    "dotnet.defaultSolution": "bolinha-3d-ImRafaelaa.sln"
 }
