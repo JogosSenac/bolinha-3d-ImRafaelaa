@@ -17,6 +17,7 @@ public class Botão : MonoBehaviour
     {
         Application.Quit();
     }
+    
 
 
 }
