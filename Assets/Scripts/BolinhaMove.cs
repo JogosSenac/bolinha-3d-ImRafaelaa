@@ -1,6 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Common;
+using UnityEngine.SceneManagement;
+using TMPro;
+using Unity.VisualScripting;
+using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class BolinhaMove : MonoBehaviour
 {
@@ -9,15 +17,29 @@ public class BolinhaMove : MonoBehaviour
     private Rigidbody rb;
     [SerializeField] private float velocidade;
     [SerializeField] private float forcaPulo;
-    [SerializeField] private bool estaVivo = true;
-    [SerializeField] private bool estaPulando = false;
-    // Start is called before the first frame update
+    [SerializeField] private bool estaVivo = true, estaPulando = false, fases = false; 
+    [SerializeField] private AudioSource sfx;
+    private TextMeshProUGUI textoPontos;
+    private TextMeshProUGUI pontoTotal;
+    private GameObject telaGameOver;
+    private GameObject outraFase;
+
+    [Header("Emojis")]
+    [SerializeField] private List<Sprite> emojis = new List<Sprite>();
+  
+    private float pontos = 0;
     void Start()
     {
+        List<int> emojis = new List<int>(3);
         rb = GetComponent<Rigidbody>();
+        sfx = GetComponent<AudioSource>();
+        textoPontos = GameObject.Find("Pontos").GetComponent<TextMeshProUGUI>();
+        pontoTotal = GameObject.Find("pontoTotal").GetComponent<TextMeshProUGUI>();
+        pontoTotal.text = GameObject.FindGameObjectsWithTag("Moeda").Length.ToString();
+        telaGameOver = GameObject.Find("Morte");
+        telaGameOver.SetActive(false);
+        outraFase = GameObject.Find("OutraFase");
     }
-
-    // Update is called once per frame
     void Update()
     {
         moveH = Input.GetAxis("Horizontal");
@@ -29,24 +51,78 @@ public class BolinhaMove : MonoBehaviour
         {
             rb.AddForce(transform.up * forcaPulo, ForceMode.Impulse);
             estaPulando = true;
+          
         }
+            VerificaObjetivos();
+
+            
+
     }
-        private void OnCollisionEnter(Collision other)
+        void OnCollisionEnter(Collision other)
         {
             if(other.gameObject.CompareTag("chão"))
             {
                 estaVivo = false;
+                gameObject.SetActive(false);
+                telaGameOver.SetActive(true);
+
             }
-            if(other.gameObject.CompareTag("solo"));
+            if(other.gameObject.CompareTag("solo"))
             {
                 estaPulando = false;
+                
             }
-        }
+            if(other.gameObject.CompareTag("Moeda"))
+            {
+                other.gameObject.SetActive(false);
+                sfx.Play();
+                pontos++;
+                textoPontos.text = pontos.ToString();
+            }
+                else
+                {
+                    sfx.Stop();
+                }
 
+            if(other.gameObject.CompareTag("fase"))
+            {
+                int TotalPontos = Int32.Parse(pontoTotal.text);
+                if(pontos == TotalPontos)
+                {
+                    SceneManager.LoadScene("Fase 2");
+                }
+            }
         
-
+            
+        }
     public bool VerificaSePlayerEstaVivo()
     {
         return estaVivo;
     }
+
+    private void VerificaObjetivos()
+    {
+        int TotalPontos = Int32.Parse(pontoTotal.text);
+        TextMeshProUGUI objetivo = GameObject.Find("Objetivo").GetComponent<TextMeshProUGUI>();
+        Image emoji = GameObject.Find("Emoji").GetComponent<Image>();
+        
+        Debug.LogFormat($"Pontos: {pontos}, Total Cubos: {TotalPontos}");
+        if(pontos < TotalPontos)
+        {
+            emoji.sprite = emojis[0];
+            objetivo.text = "Pegue todos as moedas!";
+        }
+        if (pontos >=  TotalPontos/2)
+        {
+            emoji.sprite = emojis[1];
+            objetivo.text = "Quase lá!";
+        }
+        if(pontos == TotalPontos)
+        {
+            emoji.sprite = emojis[2];
+            objetivo.text = "Todas as moedas foram coletas. passagem livre!";
+
+        }
+    }
 }
+
