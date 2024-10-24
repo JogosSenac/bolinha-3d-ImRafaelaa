@@ -21,7 +21,7 @@ public class BolinhaMove : MonoBehaviour
     [SerializeField] private AudioSource sfx;
     private TextMeshProUGUI textoPontos;
     private TextMeshProUGUI pontoTotal;
-    private GameObject telaGameOver;
+    private GameObject telaGameOver, telaFinal;
     private GameObject outraFase;
 
     [Header("Emojis")]
@@ -36,6 +36,8 @@ public class BolinhaMove : MonoBehaviour
         textoPontos = GameObject.Find("Pontos").GetComponent<TextMeshProUGUI>();
         pontoTotal = GameObject.Find("pontoTotal").GetComponent<TextMeshProUGUI>();
         pontoTotal.text = GameObject.FindGameObjectsWithTag("Moeda").Length.ToString();
+        telaFinal = GameObject.Find("Final");
+        telaFinal.SetActive(false);
         telaGameOver = GameObject.Find("Morte");
         telaGameOver.SetActive(false);
         outraFase = GameObject.Find("OutraFase");
@@ -91,6 +93,16 @@ public class BolinhaMove : MonoBehaviour
                 {
                     SceneManager.LoadScene("Fase 2");
                 }
+                
+            }
+            if(other.gameObject.CompareTag("fase1"))
+            {
+                int TotalPontos = Int32.Parse(pontoTotal.text);
+                if(pontos == TotalPontos)
+                {
+                    telaFinal.SetActive(true);
+                }
+                
             }
         
             
