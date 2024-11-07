@@ -1,2 +1,5 @@
 Assets/Scenes/abstract-neon-rays-moewalls-com.mp4 filter=lfs diff=lfs merge=lfs -text
+*.h5 filter=lfs diff=lfs merge=lfs -text
+abstract-neon-rays-moewalls-com.mp4 filter=lfs diff=lfs merge=lfs -text
+*abstract-neon-rays-moewalls-com.mp4 filter=lfs diff=lfs merge=lfs -text
 *.mp4 filter=lfs diff=lfs merge=lfs -text
