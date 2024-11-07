@@ -8,6 +8,7 @@ using Unity.VisualScripting;
 using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Xml.Serialization;
 
 
 public class BolinhaMove : MonoBehaviour
@@ -19,6 +20,7 @@ public class BolinhaMove : MonoBehaviour
     [SerializeField] private float forcaPulo;
     [SerializeField] private bool estaVivo = true, estaPulando = false, fases = false; 
     [SerializeField] private AudioSource sfx;
+    [SerializeField] private AudioSource morte;
     private TextMeshProUGUI textoPontos;
     private TextMeshProUGUI pontoTotal;
     private GameObject telaGameOver, telaFinal;
@@ -33,6 +35,7 @@ public class BolinhaMove : MonoBehaviour
         List<int> emojis = new List<int>(3);
         rb = GetComponent<Rigidbody>();
         sfx = GetComponent<AudioSource>();
+        morte = GetComponent<AudioSource>();
         textoPontos = GameObject.Find("Pontos").GetComponent<TextMeshProUGUI>();
         pontoTotal = GameObject.Find("pontoTotal").GetComponent<TextMeshProUGUI>();
         pontoTotal.text = GameObject.FindGameObjectsWithTag("Moeda").Length.ToString();
@@ -67,6 +70,8 @@ public class BolinhaMove : MonoBehaviour
                 estaVivo = false;
                 gameObject.SetActive(false);
                 telaGameOver.SetActive(true);
+                morte.Play();
+            
 
             }
             if(other.gameObject.CompareTag("solo"))

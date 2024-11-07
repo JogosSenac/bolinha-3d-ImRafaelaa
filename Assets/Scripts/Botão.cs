@@ -11,6 +11,7 @@ public class Botão : MonoBehaviour
 [SerializeField] private AudioClip play;
 private AudioSource playSource;
 
+
     public void PlayGame()
     {
         SceneManager.LoadScene("fase 1");
@@ -43,6 +44,7 @@ private AudioSource playSource;
         SceneManager.LoadScene("Menu");
 
     }
+
     
 
 
